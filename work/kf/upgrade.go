@@ -66,6 +66,28 @@ type UpgradeServiceOptions struct {
 	} `json:"groupchat"` // 推荐的客户群，type等于2时有效
 }
 
+// UpgradeServiceOptionsMember 为客户升级为专员服务请求参数
+type UpgradeServiceOptionsMember struct {
+	OpenKFID       string `json:"open_kfid"`       // 客服帐号ID
+	ExternalUserID string `json:"external_userid"` // 微信客户的external_userid
+	Type           int    `json:"type"`            // 表示是升级到专员服务还是客户群服务。1:专员服务。2:客户群服务
+	Member         struct {
+		UserID  string `json:"userid"`  // 服务专员的userid
+		Wording string `json:"wording"` // 推荐语
+	} `json:"member"` // 推荐的服务专员，type等于1时有效
+}
+
+// UpgradeServiceOptionsMemberGroupChat 为客户升级为客户群服务请求参数
+type UpgradeServiceOptionsMemberGroupChat struct {
+	OpenKFID       string `json:"open_kfid"`       // 客服帐号ID
+	ExternalUserID string `json:"external_userid"` // 微信客户的external_userid
+	Type           int    `json:"type"`            // 表示是升级到专员服务还是客户群服务。1:专员服务。2:客户群服务
+	GroupChat      struct {
+		ChatID  string `json:"chat_id"` // 客户群id
+		Wording string `json:"wording"` // 推荐语
+	} `json:"groupchat"` // 推荐的客户群，type等于2时有效
+}
+
 // UpgradeService 为客户升级为专员或客户群服务
 func (r *Client) UpgradeService(options UpgradeServiceOptions) (info util.CommonError, err error) {
 	var (
@@ -76,7 +98,24 @@ func (r *Client) UpgradeService(options UpgradeServiceOptions) (info util.Common
 	if err != nil {
 		return
 	}
-	data, err = util.PostJSON(fmt.Sprintf(upgradeService, accessToken), options)
+
+	var obj interface{}
+	if options.Type == 1 {
+		obj = UpgradeServiceOptionsMember{
+			OpenKFID:       options.OpenKFID,
+			ExternalUserID: options.ExternalUserID,
+			Type:           options.Type,
+			Member:         options.Member,
+		}
+	} else {
+		obj = UpgradeServiceOptionsMemberGroupChat{
+			OpenKFID:       options.OpenKFID,
+			ExternalUserID: options.ExternalUserID,
+			Type:           options.Type,
+			GroupChat:      options.GroupChat,
+		}
+	}
+	data, err = util.PostJSON(fmt.Sprintf(upgradeService, accessToken), obj)
 	if err != nil {
 		return
 	}
