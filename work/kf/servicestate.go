@@ -23,8 +23,8 @@ type ServiceStateGetOptions struct {
 // ServiceStateGetSchema 获取会话状态响应内容
 type ServiceStateGetSchema struct {
 	util.CommonError
-	ServiceState  int    `json:"service_state"`  // 当前的会话状态，状态定义参考概述中的表格
-	ServiceUserID string `json:"service_userid"` // 接待人员的userid，仅当state=3时有效
+	ServiceState   int    `json:"service_state"`   // 当前的会话状态，状态定义参考概述中的表格
+	ServicerUserID string `json:"servicer_userid"` // 接待人员的userid，仅当state=3时有效
 }
 
 // ServiceStateGet 获取会话状态
