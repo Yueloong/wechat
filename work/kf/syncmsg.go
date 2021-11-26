@@ -73,6 +73,9 @@ func (r *Client) SyncMsg(options SyncMsgOptions) (info SyncMsgSchema, err error)
 			if val, ok := msg["external_userid"].(string); ok {
 				newMsg.ExternalUserID = val
 			}
+			if val, ok := msg["servicer_userid"].(string); ok {
+				newMsg.ReceptionistUserID = val
+			}
 			if val, ok := msg["send_time"].(float64); ok {
 				newMsg.SendTime = uint64(val)
 			}
